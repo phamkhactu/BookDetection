@@ -88,12 +88,12 @@ class find_book:
 
 def main():
 
-  img = cv2.imread('./imageBook/1.jpg')
+  img = cv2.imread('imageBook/low_image/1.jpg')
   cv2.imshow("abcd", img)
   cv2.waitKey()
   if img is None:
     print('can not read image')
-  img = cv2.resize(img,(600,800))
+  # img = cv2.resize(img,(600,800))
   book = find_book(name='find book')
   img_preprocess = book.preprocessImg(img)
   cv2.imshow('prepreocess img',img_preprocess)
