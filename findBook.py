@@ -8,6 +8,7 @@ class find_book:
     self.name = name
     self.net = cv2.dnn_registerLayer('Crop',DNNPreprocessingImgage.CropLayer)
     self.net = cv2.dnn.readNet(os.path.join("",'./deploy.prototxt'),os.path.join("",'./hed_pretrained_bsds.caffemodel'))
+
   def preprocessImg(self,img):
     inp = cv2.dnn.blobFromImage(img, scalefactor=1.0, size=(500, 500),mean=(104.00698793, 116.66876762, 122.67891434), swapRB=False, crop=False)
     self.net.setInput(inp)
@@ -15,6 +16,7 @@ class find_book:
     out = out[0, 0]
     out = cv2.resize(out, (img.shape[1], img.shape[0]))
     return out
+
   def four_corners_sort(self,pts):
     diff = np.diff(pts, axis=1)
     summ = pts.sum(axis=1)
@@ -38,7 +40,7 @@ class find_book:
     if len(img.shape) >= 3:
       img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     ret, threshed_img = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
-    _,contours, hier = cv2.findContours(threshed_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hier = cv2.findContours(threshed_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     maxApproxpoly = None
     maxHull = None
@@ -63,6 +65,7 @@ class find_book:
           maxBox = box
           maxArea = area
     return (maxApproxpoly,maxBox,maxHull,isConvex)
+  
   def crop_book(self,img):
     maxApproxpoly,maxBox,maxHull,isConvex = self.find_four_point_corners(img)
     cutimg = None
@@ -85,10 +88,12 @@ class find_book:
 
 def main():
 
-  img = cv2.imread('./BookImages/13.jpg')
+  img = cv2.imread('./imageBook/1.jpg')
+  cv2.imshow("abcd", img)
+  cv2.waitKey()
   if img is None:
     print('can not read image')
-  #img = cv2.resize(img,(600,800))
+  img = cv2.resize(img,(600,800))
   book = find_book(name='find book')
   img_preprocess = book.preprocessImg(img)
   cv2.imshow('prepreocess img',img_preprocess)
