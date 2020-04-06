@@ -1,13 +1,14 @@
 import numpy as np
 import cv2
 import os
-import DNNPreprocessingImgage
+from module import DNNPreprocessingImgage
 
-class find_book:
+class FindBook:
   def __init__(self, name):
     self.name = name
     self.net = cv2.dnn_registerLayer('Crop',DNNPreprocessingImgage.CropLayer)
-    self.net = cv2.dnn.readNet(os.path.join("",'./deploy.prototxt'),os.path.join("",'./hed_pretrained_bsds.caffemodel'))
+    self.net = cv2.dnn.readNet(os.path.join("./module",'deploy.prototxt'),os.path.join("./module",'./hed_pretrained_bsds.caffemodel'))
+
   def preprocessImg(self,img):
     inp = cv2.dnn.blobFromImage(img, scalefactor=1.0, size=(500, 500),mean=(104.00698793, 116.66876762, 122.67891434), swapRB=False, crop=False)
     self.net.setInput(inp)
@@ -15,6 +16,7 @@ class find_book:
     out = out[0, 0]
     out = cv2.resize(out, (img.shape[1], img.shape[0]))
     return out
+
   def four_corners_sort(self,pts):
     diff = np.diff(pts, axis=1)
     summ = pts.sum(axis=1)
@@ -63,6 +65,7 @@ class find_book:
           maxBox = box
           maxArea = area
     return (maxApproxpoly,maxBox,maxHull,isConvex)
+    
   def crop_book(self,img):
     maxApproxpoly,maxBox,maxHull,isConvex = self.find_four_point_corners(img)
     cutimg = None
@@ -84,7 +87,6 @@ class find_book:
       return  None
 
 def main():
-
   img = cv2.imread('./BookImages/13.jpg')
   if img is None:
     print('can not read image')

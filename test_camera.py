@@ -1,6 +1,7 @@
 import cv2
 import os
 import findBook 
+import argparse
 
 def is_valid_img(img):
     '''
@@ -9,6 +10,7 @@ def is_valid_img(img):
 def main():
     book = findBook.find_book(name='book')
     cap = cv2.VideoCapture(0)
+    cv2.waitKey(10)
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
