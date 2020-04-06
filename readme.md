@@ -8,4 +8,4 @@
 ### Run test crop book
     python findbook.py
 ### Run test book detecion
-    python test_camera.py
+    python main.py
