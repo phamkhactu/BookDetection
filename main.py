@@ -125,12 +125,8 @@ class DetectionBook(QMainWindow):
 			self.update_info()
 
 	def btn_start_click(self):
-		# if timer is stopped
-		if not self.timer.isActive():
-			# create video capture
-			self.cap = cv2.VideoCapture(0)
-			# start timer
-			self.timer.start(20)          
+		self.cap = cv2.VideoCapture(0)
+		self.timer.start(20)          
 
 	def btn_stop_click(self):
 		self.timer.stop()
