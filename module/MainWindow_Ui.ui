@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>510</x>
-      <y>400</y>
+      <y>450</y>
       <width>91</width>
       <height>41</height>
      </rect>
@@ -57,7 +57,7 @@
     <property name="geometry">
      <rect>
       <x>510</x>
-      <y>450</y>
+      <y>500</y>
       <width>111</width>
       <height>17</height>
      </rect>
@@ -70,7 +70,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>410</y>
+      <y>460</y>
       <width>67</width>
       <height>17</height>
      </rect>
@@ -83,7 +83,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>450</y>
+      <y>500</y>
       <width>67</width>
       <height>17</height>
      </rect>
@@ -125,6 +125,32 @@
       <y>70</y>
       <width>331</width>
       <height>301</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>410</y>
+      <width>91</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Thông báo:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lable_thong_bao">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>420</y>
+      <width>211</width>
+      <height>17</height>
      </rect>
     </property>
     <property name="text">
