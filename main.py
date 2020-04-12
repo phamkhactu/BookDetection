@@ -34,16 +34,6 @@ class DetectionBook(QMainWindow):
 		self.start_time = time.time()
 		self.timer.timeout.connect(self.viewCam)
 
-		content_widget = QtWidgets.QWidget()
-		self.ui.scrollArea.setWidget(content_widget)
-		self._lay = QtWidgets.QVBoxLayout(content_widget)
-
-		self.files_it = iter( self.helper.readfiles(self.helper.folder_name))
-
-		self._timer = QTimer(self, interval=1)
-		self._timer.timeout.connect(self.on_timeout)
-		self._timer.start()
-	
 	def load(self):
 		file_name = os.path.join(self.helper.folder_name, self.helper.txt_name)
 		files = self.helper.read_txt(file_name)
@@ -89,26 +79,17 @@ class DetectionBook(QMainWindow):
 					self.page += 1
 		return self.is_new
 
-	def on_timeout(self):
-		try:
-			file = next(self.files_it)
-			pixmap = QPixmap(file)
-			self.add_pixmap(pixmap)
-		except StopIteration:
-			self._timer.stop()
 
-	def add_pixmap(self, pixmap):
-		if not pixmap.isNull():
-			pixmap = pixmap.scaled(self.ui.scrollArea.width(), self.ui.scrollArea.height())
-			label = QLabel(pixmap=pixmap)
-			self._lay.addWidget(label)
+	def set_Qimage(self, image):
+		height, width, channel = image.shape
+		step = channel * width
+		qImg = QImage(image.data, width, height, step, QImage.Format_RGB888)
+		return qImg
 
 	def viewCam(self):
 		ret, frame = self.cap.read()
 		image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-		height, width, channel = image_rgb.shape
-		step = channel * width
-		qImg = QImage(image_rgb.data, width, height, step, QImage.Format_RGB888)
+		qImg = self.set_Qimage(image_rgb)
 		qImg = qImg.scaled(self.ui.image.width(), self.ui.image.height())
 		# show image in img_label
 		self.ui.image.setPixmap(QPixmap.fromImage(qImg))
@@ -121,6 +102,9 @@ class DetectionBook(QMainWindow):
 				if crop_book is not None:
 					status = self.process(crop_book)
 					if status:
+						crop = self.set_Qimage(crop_book)
+						crop = crop.scaled(self.ui.image_crop.width(), self.ui.image_crop.height())
+						self.ui.image_crop.setPixmap(QPixmap.fromImage(crop))
 						print('=====> new page')
 			self.update_info()
 
