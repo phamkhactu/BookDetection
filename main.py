@@ -29,7 +29,7 @@ class DetectionBook(QMainWindow):
 		self.ui.btn_close.clicked.connect(self.btn_close_click)
 		self.ui.btn_stop.clicked.connect(self.btn_stop_click)
 		self.show()
-		self.is_open = False
+		self.is_new = False
 		self.timer = QTimer()
 		self.start_time = time.time()
 		self.timer.timeout.connect(self.viewCam)
@@ -63,7 +63,6 @@ class DetectionBook(QMainWindow):
 
 	def process(self, image):
 		discriptor = self.discriptor.get_descriptor(image)
-		self.is_new = False
 		if discriptor is not None:
 			if self.lst_disptor is None:
 				self.write_info(image, discriptor)
@@ -71,7 +70,7 @@ class DetectionBook(QMainWindow):
 				self.is_new = True 
 				self.page +=1
 			else:
-				scores  = [self.measure.compare(discriptor, val) for val in self.lst_disptor]
+				scores  = [self.measure.compare(discriptor, val) for val in self.lst_disptor]				
 				self.is_new = all(score < self.threshold_new for score in scores)
 				if self.is_new:
 					self.lst_disptor.append(discriptor)
@@ -100,17 +99,19 @@ class DetectionBook(QMainWindow):
 				print('is valid')
 				crop_book = self.book.crop_book(frame)
 				if crop_book is not None:
+					crop = self.set_Qimage(crop_book)
+					crop = crop.scaled(self.ui.image_crop.width(), self.ui.image_crop.height())
+					self.ui.image_crop.setPixmap(QPixmap.fromImage(crop))
 					status = self.process(crop_book)
 					if status:
-						crop = self.set_Qimage(crop_book)
-						crop = crop.scaled(self.ui.image_crop.width(), self.ui.image_crop.height())
-						self.ui.image_crop.setPixmap(QPixmap.fromImage(crop))
 						print('=====> new page')
+			else:
+				print('not valid to process')
 			self.update_info()
 
 	def btn_start_click(self):
-		self.cap = cv2.VideoCapture(0)
-		self.timer.start(20)          
+		self.cap = cv2.VideoCapture(2)
+		self.timer.start(20)   
 
 	def btn_stop_click(self):
 		self.timer.stop()
@@ -121,7 +122,7 @@ class DetectionBook(QMainWindow):
 
 def main():
 	app = QApplication(sys.argv)
-	ex = DetectionBook(100,0.01)
+	ex = DetectionBook(80,0.1)
 	sys.exit(app.exec_())
 
 if __name__ == '__main__':
