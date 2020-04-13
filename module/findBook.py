@@ -87,13 +87,13 @@ class FindBook:
       return  None
 
 def main():
-  img = cv2.imread('./BookImages/13.jpg')
+  img = cv2.imread('/home/tu/AI/code/aladin/BookImages/7.jpg')
   if img is None:
     print('can not read image')
   #img = cv2.resize(img,(600,800))
-  book = find_book(name='find book')
-  img_preprocess = book.preprocessImg(img)
-  cv2.imshow('prepreocess img',img_preprocess)
+  book = FindBook(name='find book')
+  # img_preprocess = book.preprocessImg(img)
+  # cv2.imshow('prepreocess img',img_preprocess)
   cropbook = book.crop_book(img)
   cv2.imshow('crop book',cropbook)
   cv2.waitKey()

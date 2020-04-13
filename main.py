@@ -23,6 +23,7 @@ class DetectionBook(QMainWindow):
         self.helper = Helper()
         self.lst_disptor = self.load()
         self.page = 0
+        self.start = False
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.btn_start.clicked.connect(self.btn_start_click)
@@ -96,15 +97,19 @@ class DetectionBook(QMainWindow):
         if exectime >=5:
             self.start_time = time.time()
             if self.is_valid_img(frame):
-                self.ui.lable_thong_bao.setText('Đang xử lý')
-                crop_book = self.book.crop_book(frame)
-                if crop_book is not None:
-                    crop = self.set_Qimage(crop_book)
-                    crop = crop.scaled(self.ui.image_crop.width(), self.ui.image_crop.height())
-                    self.ui.image_crop.setPixmap(QPixmap.fromImage(crop))
-                    status = self.process(crop_book)
-                    if status:
-                        print('=====> new page')
+                if not self.start:
+                    self.start = True
+                else:
+                    self.ui.lable_thong_bao.setText('Đang xử lý')
+                    crop_book = self.book.crop_book(frame)
+                    if crop_book is not None:
+                        # crop = cv2.cvtColor(crop_book, cv2.COLOR_BGR2RGB)
+                        crop = self.set_Qimage(crop_book)
+                        crop = crop.scaled(self.ui.image_crop.width(), self.ui.image_crop.height())
+                        self.ui.image_crop.setPixmap(QPixmap.fromImage(crop))
+                        status = self.process(crop_book)
+                        if status:
+                            print('=====> new page')
             else:            
                 self.ui.lable_thong_bao.setText('Ảnh quá mờ để xử lý')
             self.update_info()
@@ -122,7 +127,7 @@ class DetectionBook(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
-    ex = DetectionBook(80,0.1)
+    ex = DetectionBook(60,0.1)
     sys.exit(app.exec_())
 
 if __name__ == '__main__':
