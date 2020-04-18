@@ -12,4 +12,4 @@
     python main_v1.py
 
 ### Demo 
-![Demo]('./ezgif.com-video-to-gif.gif')
+![Demo](./ezgif.com-video-to-gif.gif)
